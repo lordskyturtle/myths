@@ -15,9 +15,10 @@ class Room():
         return_value = ""
         if len(self.exits) > 0:
             for exit in self.exits:
-                direction = abs(Direction(exit))
+                direction = Direction(exit)
                 if exit < 0:
-                    direction = 
+                    # direction =
+                    pass 
                 return_value += '%s ' % (direction)
         else:
             return 'No exits. You are stuck.'

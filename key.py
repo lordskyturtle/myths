@@ -1,9 +1,8 @@
 # key
 class Key:
 
-    def __init__(self, name, unlocked, target):
+    def __init__(self, name, unlocked):
         self.name = name
-        self.target = target
         # self.description = description
         self.unlocked = unlocked
 

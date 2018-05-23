@@ -5,6 +5,7 @@ from item import Item
 from direction import Direction
 from monster import Monster
 from key import Key
+from connection import Connection
 
 
 class World():
@@ -25,14 +26,15 @@ class World():
         room.inventory.add(lantern)
         kitchenKey = Item("kitchen key")
         kitchenKey.shortname = 'key'
-        kitchenKey.key = Key("kitchen key", "The door is unlocked.", Item("Kitchen Door"))
+        kitchenKey.key = Key("kitchen key", "The door is unlocked.")
         kitchenKey.effects['description'] = "It's a key to the kitchen."
         room.inventory.add(kitchenKey)
         room.long_description = """You are in a small shack. It has a creaky floor, leaky roof and you are scared.oh not of the room but the cage with a lion in it."""
         room.short_description = """A small wooden shack."""
         room.name = "Shack"
-        room.exits = {'e': 1, 'w': -3}
-        room.locked = {'w': 'The kitchen door is firmly locked. There should be a key somewhere around.'}
+        #room.exits = {'e': 1, 'w': -3}
+        room.exits = {'e': Connection(1), 'w': Connection(3,'kitchen door','locked',kitchenKey,'The kitchen door is firmly locked. There should be a key somewhere around.') }
+        #room.locked = {'w': }
         room.monster = Monster('orc', 5, 10, 1)
         return room
 
@@ -48,7 +50,9 @@ class World():
         room.long_description = """You stand in a bedroom. You at least assume it is a bedroom because of the bed. Although the giant bear might make sleeping a bit difficult.oh yeah the its a stuffed bear."""
         room.short_description = """A bedroom"""
         room.name = "Bedroom"
-        room.exits = {'w': 0,'n': 2}
+        room.exits = {'n': Connection(2), 'w': Connection(0) }
+
+        #room.exits = {'w': 0,'n': 2}
         return room
 
 
@@ -60,7 +64,8 @@ class World():
         room.long_description = """It's another bedroom. With another bed. The bed appears to be asleep."""
         room.short_description = """Another bedroom."""
         room.name = "Bedroom"
-        room.exits = {'s': 1}
+        room.exits = {'s': Connection(1) }
+        #room.exits = {'s': 1}
         return room
 
     def kitchen(self):
@@ -79,7 +84,8 @@ class World():
         room.long_description = """You think it's a kitchen but its hard to tell because it also could be a pet room, for aliens, which the room is full of."""
         room.short_description = """An old kitchen."""
         room.name = "Kitchen"
-        room.exits = {'e': 0}
+        room.exits = {'e': Connection(0) }        
+        #room.exits = {'e': 0}
         return room
 
     def showInventory(self):
@@ -117,12 +123,10 @@ class World():
         room = self.room[self.location]
         if len(room.exits) > 0:
             if direction in room.exits:
-                if room.exits[direction] < 0:
-                    if room.locked[direction]:
-                        return room.locked[direction]
-                    else:
-                        return "That way is blocked."
-                self.location = int(room.exits[direction])
+                if room.exits[direction].state == 'locked':
+                    return room.exits[direction].locked
+                self.location = room.exits[direction].room_id
+                # replace with a proper move()
                 return self.look(True) + "\n" + self.showInventory()
             else:
                 return "There is nothing there."

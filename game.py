@@ -7,7 +7,7 @@ from character import Character
 from ranger import Ranger
 from mage import Mage
 from warrior import Warrior
-
+from connection import Connection
 
 
 class Game:
@@ -156,5 +156,11 @@ class Game:
     def needTwoWords(self):
         return "Sorry you need to enter more than one word"
 
-    def unlock(self):
-        
+    def unlock(self, words):
+        words.pop(0)
+        rest = ' '.join(words)
+        for exit in self.room.exits:
+            print(exit)
+
+            #if connection.name == things:
+            #    return "YAY"
