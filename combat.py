@@ -107,9 +107,30 @@ class Combat:
         
         if self.playerOption == "defending" and self.monsterOption == "defending":
             output.append("\n A boring interlude occurs where you both cower in fear.\n")
-        
-        return output
 
+        if self.playerOption == "running":
+            chance = randint(0,100)
+            if chance >= 50:
+                self.combat = False
+                self.result = "ran"
+                output.append("\nYou ran away. You coward.\n")
+            if chance <= 10 and chance >0:
+                damage = randint(1,3)
+                self.character.injure(damage)
+                output.append("\nYou stumble and hurt yourself for %s damage\n" % (damage))
+            if chance == 0:
+                self.character.injure(100000)
+                output.append("You turn, trip and the %s lands on you and crushes you" % (self.monster.name))
+        
+        if self.monsterOption == "running":
+            chance = randint(0,100)
+            if chance >= 50:
+                self.combat = False
+                self.result = "monster ran"
+                output.append("\nYou literally scare the poor %s away.\n" %(self.monster.name))
+
+
+        return output
 
     def getOptions(self):
         options = ['attack', 'defend', 'run']
@@ -122,29 +143,14 @@ class Combat:
             print self.option_descriptions[o]    
 
     def run(self):
-        chance = randint(0,100)
-        if chance >= 50:
-            self.combat = False
-            self.result = "ran"
-            return 'You ran away. You coward.'
-        if chance <= 10 and chance >0:
-            damage = randint(1,3)
-            self.character.injure(damage)
-            return "You stumble and hurt yourself for %s damage" % (damage)
-        if chance == 0:
-            self.character.injure(100000)
-            return "You turn, trip and the %s lands on you and crushes you" % (self.monster.name)
-        return "You just can't get away."
+        self.playerOption = "running"
 
     def defend(self):
         self.playerOption = 'defending'
-        return
 
     def attack(self):
         self.playerOption = 'attacking'
-        return
         
-
     def spell(self):
         self.playerOption = "spell"
         return

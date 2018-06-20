@@ -82,9 +82,13 @@ class Game:
             #check location for monster
             if self.room.monster:
                 result = output
-                Combat(self.player, self.room.monster, result)
+                result = Combat(self.player, self.room.monster)
                 if result == "death":
                     self.command['quit']()
+                if result == "quit":
+                    self.command['quit']()
+                if result == "error":
+                    print "\nSomething weird just happened. Hopefully it wont happen again.\n"
                 if result == "monster dead":
                     # add monster inv to room inv along with x drops y
                     self.player.health = self.player.max_health
