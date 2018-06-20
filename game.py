@@ -8,7 +8,7 @@ from ranger import Ranger
 from mage import Mage
 from warrior import Warrior
 from connection import Connection
-
+from direction import Direction
 
 class Game:
 
@@ -46,7 +46,7 @@ class Game:
             'drop': self.needTwoWords,
             'throw': self.needTwoWords,
             'use' : self.needTwoWords,
-            'unlock': self.needTwoWords,
+            'unlock': self.needTwoWords
         }
         self.multi = {
             'p': self.pickup,
@@ -78,7 +78,24 @@ class Game:
         while 1:
             command = self.command('>')
             print(command)
-                    
+            #after command
+            #check location for monster
+            if self.room.monster:
+                result = output
+                Combat(self.player, self.room.monster, result)
+                if result == "death":
+                    self.command['quit']()
+                if result == "monster dead":
+                    # add monster inv to room inv along with x drops y
+                    self.player.health = self.player.max_health
+                    self.room.monster = None
+
+                if result == "ran":
+                    print "\nYou better choose somewhere to go quick!\n"
+                if result == "monster ran":
+                    print "\nThe %s ran away from you\n" % (self.room.monster.name)
+                    self.room.monster = None
+
     def pickup(self, words):
         if words[1] == 'up':
             words.pop(1)
@@ -159,8 +176,15 @@ class Game:
     def unlock(self, words):
         words.pop(0)
         rest = ' '.join(words)
-        for exit in self.room.exits:
-            print(exit)
+        for direction in Direction.directions:
+            if rest.lower() == direction or rest.lower() == Direction.directions[direction].lower():
+                unlock_target = direction
+                if self.room.exits[direction].state == 'locked':
+                    # check for the key in inventory
+                    print('Key will be ' + self.room.exits[direction].key.name)
+                    if self.player.inventory.find(self.room.exits[direction].key):
+                        self.room.exits[direction].state = 'unlocked'
+                        return self.room.exits[direction].key.key.unlock()
+                    break
+        return "Nothing found to unlock"
 
-            #if connection.name == things:
-            #    return "YAY"

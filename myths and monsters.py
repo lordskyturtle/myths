@@ -14,7 +14,7 @@ def startgame ():
     print("Welcome to Myths and Monsters!This is a text based game where you type to answer.Now lets begin by picking your class.")
     while 1:
         characterloop()
-        print 'looping'
+        print('looping')
 
 def characterloop():
     character = None

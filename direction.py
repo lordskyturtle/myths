@@ -1,8 +1,10 @@
 class Direction:
 
+    directions = {'e':'East', 'w':'West', 'n':'North', 's':'South'}
+
+
     def __init__(self, name):
         self.name = name
-        self.directions = {'e':'East', 'w':'West', 'n':'North', 's':'South'}
    
     def __repr__(self):
         return self.getFullName()

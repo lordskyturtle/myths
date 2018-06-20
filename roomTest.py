@@ -12,7 +12,7 @@ if __name__ == "__main__":
 	r.monster = {}
 	print 'putting a monster in the room'
 	if r.hasMonster():
-		print "MONSTER"
+		print("MONSTER")
 	else:
-		print "NO MONSTER"
+		print("NO MONSTER")
 	

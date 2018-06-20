@@ -2,8 +2,8 @@ from character import Character
 
 class Monster(Character):
     
-    def __init__(self, name, attack, damage, health):
+    def __init__(self, name, attack, defence, health):
         self.name = name
-        self.attack = 0
-        self.health = 0
-        self.damage = 0
+        self.attack = attack
+        self.defence = defence
+        self.health = health
