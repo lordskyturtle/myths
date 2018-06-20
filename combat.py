@@ -32,6 +32,7 @@ class Combat:
             'run' : self.run,
             'spell' : self.spell
         }
+        self.result = "error"
         self.main()
 
     def main(self):
@@ -45,47 +46,42 @@ class Combat:
             command = raw_input('>').strip().lower()
             if command in self.option_string.keys():
                 #print(self.option_string[command])          
-                output = self.commands[self.option_string[command]]()
+                self.commands[self.option_string[command]]()
+                output = ""
                 if self.combat == False:
                     break
                 self.monsterOptions()
                 # player attacks monster defends
                 combat_messages = self.doCombat()
-                for lines in combat_messages:
-                    output += combat_messages + "\n"
+                for line in combat_messages:
+                    output += line + "\n"
                 if self.monster.health <= 0:
                     output += "\n" + self.success()
-                    if self.player.health <= 0:
-                        self.player.health += 2
+                    if self.character.health <= 0:
+                        self.character.health += 2
                 else:
-                    if self.player.health <= 0:
+                    if self.character.health <= 0:
                         output += "\n" + self.death()
                 print output
-            
+        return self.result
 
     def doCombat(self):
-        # player defends monster defends
-        # player attacks monster attacks
-        # player spells monster defends
-        # player spells monster attacks
-        # player defends monster attacks
-        # player runs monster attacks
-        # player defends monster runs
-        # player runs monster runs
-        # player attacks monster runs
-        # player runs monster defends
+        # init
+        # 
         chanceofdefend = 0
         characterdefend = 0
         output = []
+        output.append("\n %s is %s \n You are %s \n " % (self.monster.name, self.monsterOption, self.playerOption))
+        # set monster defence
         if self.monsterOption == "defending":
             chanceofdefend = self.monster.defence * 5
         if self.monsterOption == "attacking":
             changeofdefend = self.monster.defence
         if self.monsterOption == "running":
             chanceofdefend = 0
-
+        # set player defence
         if self.playerOption == "defending":
-            characterdefend = self.character.defence * 5
+            characterdefend = self.character.defence * 10
         if self.playerOption == "attacking":
             characterdefend = self.character.defence
         if self.playerOption == "spelling" or self.playerOption == "running":
@@ -93,21 +89,25 @@ class Combat:
 
         if self.playerOption == "attacking":
             chance = randint(0,100)
+            # if roll is less than the monsters defence then miss
             if chance <= chanceofdefend:
-                output[] = "You attack but miss"
+                output.append("You attack but miss")
             else:
                 self.monster.health = self.monster.health - self.character.attack
-                output[] = "You attack and hit the %s for %s damage" % (self.monster.name, self.character.attack)
+                output.append("You attack and hit the %s for %s damage" % (self.monster.name, self.character.attack))
         
         if self.monsterOption == "attacking":
             chance = randint(0,100)
+            # if roll is less than the players defence then miss
             if chance <= characterdefend:
-                output[] = "you defend"
+                output.append("\n You defend yourself.\n")
             else:
                 self.character.injure(self.monster.attack)
-                output[] = "you got hit for %s" %self.monster.attack
+                output.append("\n You got hit for %s \n" % (self.monster.attack) )
+        
         if self.playerOption == "defending" and self.monsterOption == "defending":
-            output[] = "A boring interlude where you both cower in fear."
+            output.append("\n A boring interlude occurs where you both cower in fear.\n")
+        
         return output
 
 
@@ -125,6 +125,7 @@ class Combat:
         chance = randint(0,100)
         if chance >= 50:
             self.combat = False
+            self.result = "ran"
             return 'You ran away. You coward.'
         if chance <= 10 and chance >0:
             damage = randint(1,3)
@@ -137,16 +138,16 @@ class Combat:
 
     def defend(self):
         self.playerOption = 'defending'
-        return 'defending'
+        return
 
     def attack(self):
         self.playerOption = 'attacking'
-        return 'attacking'
+        return
         
 
     def spell(self):
         self.playerOption = "spell"
-        return 'spelling'
+        return
 
     def monsterOptions(self):
         options = ['attacking', 'defending', 'running']
@@ -156,12 +157,15 @@ class Combat:
 
     def quit(self):
         self.combat = False
-        return 'You quit the game'
+        self.result = "quit"
+        return '\nYou quit the game'
 
     def success(self):
         self.combat = False
-        return "You vanquish the monster"
+        self.result = "monster dead"
+        return "\nYou vanquish the monster"
 
     def death(self):
         self.combat = False
-        return "You feel very sleepy. You fall to the ground and the game ends."
+        self.result = "death"
+        return "\nYou feel very sleepy. You fall to the ground and the game ends."
