@@ -7,3 +7,4 @@ class Monster(Character):
         self.attack = attack
         self.defence = defence
         self.health = health
+        self.magic = 0

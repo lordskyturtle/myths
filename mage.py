@@ -13,4 +13,4 @@ class Mage(Character):
         self.description = "You are an arcane wizard with limitless powers of fire and other elements.You destroy your table weekly."
         self.weapon = "staff and magic"
         self.inventory.add(Item('wand', True))
-        self.magic = 1000
+        self.magic = 0

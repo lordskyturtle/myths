@@ -9,6 +9,7 @@ from mage import Mage
 from warrior import Warrior
 from connection import Connection
 from direction import Direction
+from combat import Combat
 
 class Game:
 
@@ -75,30 +76,34 @@ class Game:
 
     def mainLoop(self):
         print("This would be the intro to the game... enter something...")
+        print(self.world.look(True))
         while 1:
             command = self.command('>')
             print(command)
             #after command
             #check location for monster
-            if self.room.monster:
-                result = output
-                result = Combat(self.player, self.room.monster)
+            room = self.world.room[self.world.location]
+            #print "\n debug :: %s \n" % (room.name)
+            if room.monster:
+                print "\nYou see a %s and it attacks you." % (room.monster.name)
+                combat = Combat(self.player, room.monster)
+                result = combat.main()
                 if result == "death":
-                    self.command['quit']()
+                    sys.exit()
                 if result == "quit":
-                    self.command['quit']()
+                    sys.exit()
                 if result == "error":
                     print "\nSomething weird just happened. Hopefully it wont happen again.\n"
                 if result == "monster dead":
                     # add monster inv to room inv along with x drops y
                     self.player.health = self.player.max_health
-                    self.room.monster = None
+                    self.world.room[self.world.location].monster = None
 
                 if result == "ran":
                     print "\nYou better choose somewhere to go quick!\n"
                 if result == "monster ran":
-                    print "\nThe %s ran away from you\n" % (self.room.monster.name)
-                    self.room.monster = None
+                    print "\nThe %s ran away from you\n" % (room.monster.name)
+                    self.world.room[self.world.location].monster = None
 
     def pickup(self, words):
         if words[1] == 'up':
@@ -183,12 +188,14 @@ class Game:
         for direction in Direction.directions:
             if rest.lower() == direction or rest.lower() == Direction.directions[direction].lower():
                 unlock_target = direction
-                if self.room.exits[direction].state == 'locked':
+                room = self.world.room[self.world.location]
+                if room.exits[direction].state == 'locked':
                     # check for the key in inventory
-                    print('Key will be ' + self.room.exits[direction].key.name)
-                    if self.player.inventory.find(self.room.exits[direction].key):
-                        self.room.exits[direction].state = 'unlocked'
-                        return self.room.exits[direction].key.key.unlock()
+                    print('Key will be ' + room.exits[direction].key.name)
+                    if self.player.inventory.find(room.exits[direction].key) or self.player.inventory.find(room.exits[direction].key.name):
+                        self.world.room[self.world.location].exits[direction].state = "unlocked"
+                        # self.player.inventory.get(room.exits[direction].key.name).unlock()
+                        return "You unlock the door"
                     break
         return "Nothing found to unlock"
 

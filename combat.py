@@ -5,7 +5,7 @@ from random import randint
 
 class Combat:
 
-    def __init__(self, monster, character):
+    def __init__(self, character, monster):
         self.monster = monster
         self.character = character
         self.combat = True
@@ -33,7 +33,6 @@ class Combat:
             'spell' : self.spell
         }
         self.result = "error"
-        self.main()
 
     def main(self):
 
