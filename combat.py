@@ -34,6 +34,8 @@ class Combat:
         }
         self.result = "error"
 
+
+
     def main(self):
 
         # input
@@ -121,6 +123,9 @@ class Combat:
                 self.character.injure(100000)
                 output.append("You turn, trip and the %s lands on you and crushes you" % (self.monster.name))
         
+        if self.playerOption == "fumbling":
+            output.append("You either forget you cannot cast any magic or somehow the universe has sapped your magical powers. Either way that doesn't work.")
+
         if self.monsterOption == "running":
             chance = randint(0,100)
             if chance >= 50:
@@ -151,7 +156,10 @@ class Combat:
         self.playerOption = 'attacking'
         
     def spell(self):
-        self.playerOption = "spell"
+        if self.character.hasMagic():
+            self.playerOption = "spelling"
+        else:
+            self.playerOption = "fumbling"
         return
 
     def monsterOptions(self):

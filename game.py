@@ -13,6 +13,11 @@ from combat import Combat
 
 class Game:
 
+    # 
+    # @param player Character
+    # @param world World
+    # @param location string
+    # 
     def __init__(self, player, world, location):
         self.world = world
         self.usewords = ['with', 'on', 'in']
@@ -21,6 +26,7 @@ class Game:
         self.player = player
         self.location = location
         self.room = self.world.room[location]
+
         self.commands = {
             'exits': self.world.listExits,
             'ex': self.world.listExits,
@@ -49,6 +55,7 @@ class Game:
             'use' : self.needTwoWords,
             'unlock': self.needTwoWords
         }
+ 
         self.multi = {
             'p': self.pickup,
             'pick': self.pickup,
@@ -130,7 +137,8 @@ class Game:
         description = "dropping %s.\n" % (rest)
         itemtodrop = self.player.inventory.remove(Item(rest)) 
         if itemtodrop:
-            self.room.inventory.add(itemtodrop)
+            room = self.world.room[self.world.location]
+            room.inventory.add(Item(rest))
         else:
             return "%s - you cannot drop that item." % (description)
 
@@ -192,10 +200,12 @@ class Game:
                 if room.exits[direction].state == 'locked':
                     # check for the key in inventory
                     print('Key will be ' + room.exits[direction].key.name)
-                    if self.player.inventory.find(room.exits[direction].key) or self.player.inventory.find(room.exits[direction].key.name):
+                    if self.player.inventory.find(room.exits[direction].key) or self.player.inventory.find(room.exits[direction].key):
                         self.world.room[self.world.location].exits[direction].state = "unlocked"
                         # self.player.inventory.get(room.exits[direction].key.name).unlock()
                         return "You unlock the door"
+                    else:
+                        return "You don't have the key to do that."
                     break
         return "Nothing found to unlock"
 
