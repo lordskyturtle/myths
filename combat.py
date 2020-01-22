@@ -23,7 +23,7 @@ class Combat:
             'attack' : 'A - attack with a weapon',
             'defend' : 'D - defend yourself',
             'run' : 'R - try to run away',
-            'spell' : 'S - cast a healing spell'
+            'spell' : 'S - cast a spell'
         }
         self.commands = {
             'attack' : self.attack,
@@ -87,6 +87,12 @@ class Combat:
             characterdefend = self.character.defence
         if self.playerOption == "spelling" or self.playerOption == "running":
             characterdefend = 0
+
+        if self.playerOption == "spelling":
+            # if self.player.spellbook.active.effect == heal
+            # == attack 
+            # == fireball
+            # == 
 
         if self.playerOption == "attacking":
             chance = randint(0,100)
@@ -158,6 +164,8 @@ class Combat:
     def spell(self):
         if self.character.hasMagic():
             self.playerOption = "spelling"
+            # todo add a call to self.character.spellbook.choose()
+            # this sets the spell in self.character.spellbook.active
         else:
             self.playerOption = "fumbling"
         return
