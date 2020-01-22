@@ -36,6 +36,7 @@ class Combat:
 
 
 
+    @decorate
     def main(self):
 
         # input
