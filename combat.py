@@ -23,7 +23,7 @@ class Combat:
             'attack' : 'A - attack with a weapon',
             'defend' : 'D - defend yourself',
             'run' : 'R - try to run away',
-            'spell' : 'S - cast a healing spell'
+            'spell' : 'S - cast a spell'
         }
         self.commands = {
             'attack' : self.attack,
@@ -34,6 +34,9 @@ class Combat:
         }
         self.result = "error"
 
+
+
+    @decorate
     def main(self):
 
         # input
@@ -86,6 +89,12 @@ class Combat:
         if self.playerOption == "spelling" or self.playerOption == "running":
             characterdefend = 0
 
+        if self.playerOption == "spelling":
+            # if self.player.spellbook.active.effect == heal
+            # == attack 
+            # == fireball
+            # == 
+
         if self.playerOption == "attacking":
             chance = randint(0,100)
             # if roll is less than the monsters defence then miss
@@ -121,6 +130,9 @@ class Combat:
                 self.character.injure(100000)
                 output.append("You turn, trip and the %s lands on you and crushes you" % (self.monster.name))
         
+        if self.playerOption == "fumbling":
+            output.append("You either forget you cannot cast any magic or somehow the universe has sapped your magical powers. Either way that doesn't work.")
+
         if self.monsterOption == "running":
             chance = randint(0,100)
             if chance >= 50:
@@ -151,7 +163,12 @@ class Combat:
         self.playerOption = 'attacking'
         
     def spell(self):
-        self.playerOption = "spell"
+        if self.character.hasMagic():
+            self.playerOption = "spelling"
+            # todo add a call to self.character.spellbook.choose()
+            # this sets the spell in self.character.spellbook.active
+        else:
+            self.playerOption = "fumbling"
         return
 
     def monsterOptions(self):

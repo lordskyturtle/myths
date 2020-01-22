@@ -16,6 +16,7 @@ class Character(object):
         self.weapon = ""
         self.inventory = Inventory()
         self.inventory.add(Item('gold'), 10)
+        self.commands = self.getCommands()
 
     def hasMagic(self):
         if self.magic > 0:
@@ -49,3 +50,10 @@ class Character(object):
         self.health -= amount
         if self.health <= 0:
             self.health = 0
+
+    def getCommands(self):
+        return {
+            'health': self.showHealth,
+            'h': self.showHealth,
+            'hurt': self.injure,
+        }

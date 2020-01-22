@@ -160,7 +160,7 @@ class World():
         breadcrumbs = Item("bread crumbs")
         breadcrumbs.effects['description'] = "What are you going to do with BREADCRUMBS!"
         room.inventory.add(breadcrumbs)
-        plate = Item("Broken plate")
+        plate = Item("broken plate")
         plate.movable = False
         plate.messages["nopickup"] = "You are a safe person and know not to pick up broken pottery.\nOr you would be if you had not just asked your character to pick up a broke plate."
         room.inventory.add(plate)
